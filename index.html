@@ -1,167 +1,168 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>San Valentín Romántico</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: radial-gradient(circle at top, #ffd6e7, #ff9a9e, #fecfef);
-            color: #d63384;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>San Valentín 💘</title>
 
-        .container {
-            background: rgba(255,255,255,0.95);
-            border-radius: 25px;
-            padding: 40px 25px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-            z-index: 10;
-        }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-        h1 { font-size: 1.9em; margin-bottom: 15px; }
-        p { font-size: 1.15em; margin-bottom: 25px; min-height: 60px; }
+    body {
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-        button {
-            font-size: 1.1em;
-            padding: 15px 25px;
-            margin: 8px;
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-        }
+      /* Mezcla de fondos */
+      background:
+        linear-gradient(rgba(255, 182, 193, 0.6), rgba(255, 182, 193, 0.6)),
+        url('fondo1.jpg') center/cover no-repeat,
+        url('fondo2.jpg') center/cover no-repeat,
+        url('fondo3.jpg') center/cover no-repeat;
 
-        #si { background:#ff4d88; color:white; }
-        #no { background:#ccc; color:#666; }
+      animation: fondoMove 20s infinite alternate ease-in-out;
+    }
 
-        .hidden { display:none; }
+    @keyframes fondoMove {
+      0% { background-position: center, top left, center, bottom right; }
+      100% { background-position: center, bottom right, center, top left; }
+    }
 
-        /* corazones flotando */
-        .heart-bg {
-            position: fixed;
-            font-size: 22px;
-            animation: floatUp linear infinite;
-            pointer-events: none;
-        }
+    .container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 35px;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-width: 400px;
+      z-index: 2;
+      animation: aparecer 1s ease;
+    }
 
-        @keyframes floatUp {
-            from { transform: translateY(100vh); }
-            to { transform: translateY(-10vh); }
-        }
+    @keyframes aparecer {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
 
-        /* explosión */
-        .explosion-heart {
-            position: fixed;
-            font-size: 26px;
-            animation: explode 1s ease-out forwards;
-            pointer-events: none;
-        }
+    h1 { color: #e91e63; margin-bottom: 15px; }
+    p { margin-bottom: 20px; }
 
-        @keyframes explode {
-            to {
-                transform: translate(var(--x), var(--y)) scale(0);
-                opacity: 0;
-            }
-        }
-    </style>
+    button {
+      padding: 15px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin: 8px;
+      transition: 0.3s;
+    }
+
+    #si { background: #ff4d88; color: white; }
+    #no { background: #ccc; }
+
+    #si:hover { transform: scale(1.1); }
+    #no:hover { transform: scale(1.1); }
+
+    .hidden { display: none; }
+
+    /* Lluvia de corazones */
+    .heart {
+      position: fixed;
+      top: -10px;
+      font-size: 24px;
+      animation: caer linear forwards;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes caer {
+      to {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
+
+    img {
+      width: 150px;
+      border-radius: 20px;
+      margin-top: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+  </style>
 </head>
+
 <body>
 
-<audio id="musica" loop>
-    <source src="MUSICA.mp3" type="audio/mpeg">
-</audio>
+  <!-- Pantalla inicial -->
+  <div id="inicio" class="container">
+    <h1>¿Quieres ser mi San Valentín? 💖</h1>
+    <p>Prometo hacerte sonreír todos los días.</p>
 
-<div id="pantalla-inicial" class="container">
-    <h1>¿Quieres ser mi San Valentín?</h1>
-    <p id="mensaje">En este día de amor, mi corazón late solo por ti. ¿Aceptas?</p>
-    <button id="si">Sí 💖</button>
-    <button id="no">No 🙈</button>
-</div>
+    <button id="si">Sí 💘</button>
+    <button id="no">No 😢</button>
+  </div>
 
-<div id="pantalla-felicidades" class="container hidden">
-    <h1>¡Felicidades, Nico!</h1>
-    <img src="foto.jpg" style="width:100%;border-radius:18px;margin-bottom:15px;">
-    <p>Te amo con todo mi corazón ❤️</p>
-</div>
+  <!-- Pantalla final -->
+  <div id="final" class="container hidden">
+    <h1>¡Sabía que dirías que sí! 💞</h1>
+    <p>Ahora este será el San Valentín más bonito de todos.</p>
 
-<script>
-const siButton=document.getElementById('si');
-const noButton=document.getElementById('no');
-const mensaje=document.getElementById('mensaje');
-const pantallaInicial=document.getElementById('pantalla-inicial');
-const pantallaFelicidades=document.getElementById('pantalla-felicidades');
-const musica=document.getElementById('musica');
+    <!-- CAMBIA "foto.jpg" por tu foto -->
+    <img src="foto.jpg" alt="Nosotros" />
+  </div>
 
-const frases=[
-"¡Piensa en lo bonito que sería juntos! 💕",
-"Prometo hacerte sonreír 😍",
-"Será un 14 inolvidable ✨",
-"Di que sí… ❤️",
-"Siempre te elegiría 💘"
-];
+  <!-- Música -->
+  <audio id="musica" src="musica.mp3" loop></audio>
 
-let i=0;
-let scale=1;
+  <script>
+    const si = document.getElementById('si');
+    const no = document.getElementById('no');
+    const inicio = document.getElementById('inicio');
+    const final = document.getElementById('final');
+    const musica = document.getElementById('musica');
 
-function fondoCorazones(){
-    setInterval(()=>{
-        const h=document.createElement('div');
-        h.className='heart-bg';
-        h.textContent='💖';
-        h.style.left=Math.random()*100+'vw';
-        h.style.animationDuration=(4+Math.random()*4)+'s';
-        document.body.appendChild(h);
-        setTimeout(()=>h.remove(),8000);
-    },300);
-}
+    // Botón Sí
+    si.addEventListener('click', () => {
+      inicio.classList.add('hidden');
+      final.classList.remove('hidden');
+      musica.play();
+      explosionCorazones();
+    });
 
-function explosion(){
-    for(let j=0;j<25;j++){
-        const e=document.createElement('div');
-        e.className='explosion-heart';
-        e.textContent='💖';
-        e.style.setProperty('--x',(Math.random()-0.5)*400+'px');
-        e.style.setProperty('--y',(Math.random()-0.5)*400+'px');
-        e.style.left='50%';
-        e.style.top='50%';
-        document.body.appendChild(e);
-        setTimeout(()=>e.remove(),1000);
+    // Botón No (cambia texto en vez de alert)
+    no.addEventListener('click', () => {
+      inicio.querySelector('p').textContent =
+        'Está bien… pero seguiré intentando conquistarte porque me encantas 💗';
+    });
+
+    // Crear lluvia constante de corazones
+    function crearLluvia() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = '💖';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = 3 + Math.random() * 3 + 's';
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 6000);
     }
-}
 
-function noClick(){
-    scale+=0.15;
-    siButton.style.transform=`scale(${scale})`;
-    if(i<frases.length){
-        mensaje.textContent=frases[i++];
+    setInterval(crearLluvia, 300);
+
+    // Explosión de corazones al decir Sí
+    function explosionCorazones() {
+      for (let i = 0; i < 40; i++) {
+        setTimeout(crearLluvia, i * 50);
+      }
     }
-}
-
-function siClick(){
-    musica.play().catch(()=>{});
-    explosion();
-    setTimeout(()=>{
-        pantallaInicial.classList.add('hidden');
-        pantallaFelicidades.classList.remove('hidden');
-    },800);
-}
-
-siButton.onclick=siClick;
-noButton.onclick=noClick;
-
-fondoCorazones();
-</script>
+  </script>
 
 </body>
 </html>
