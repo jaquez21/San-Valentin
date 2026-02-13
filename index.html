@@ -1,249 +1,98 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>San Valentín</title>
+<script>
+const fotos = document.querySelectorAll('.foto-circular');
+const limite = 260;
+const size = 80;
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
-    }
+const objetos = [];
 
-    body {
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      color: #d63384;
+// POSICIONES INICIALES DISTRIBUIDAS (para que no se tapen)
+const posicionesIniciales = [
+  {x: 10, y: 10},
+  {x: 160, y: 10},
+  {x: 10, y: 160},
+  {x: 160, y: 160},
+  {x: 85, y: 40},
+  {x: 40, y: 110}
+];
 
-      background:
-        linear-gradient(rgba(255, 182, 193, 0.6), rgba(255, 105, 180, 0.6)),
-        url("fondo4.jpg") center/cover no-repeat,
-        url("fondo2.jpg") left/cover no-repeat,
-        url("fondo3.jpg") right/cover no-repeat;
-    }
+fotos.forEach((foto, i) => {
 
-    .container {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 25px;
-      padding: 40px 25px;
-      max-width: 400px;
-      width: 90%;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-      position: relative;
-      z-index: 10;
-    }
+  let pos = posicionesIniciales[i % posicionesIniciales.length];
 
-    h1 { margin-bottom: 15px; }
-    p { margin-bottom: 25px; font-size: 1.1em; }
+  let x = pos.x;
+  let y = pos.y;
 
-    button {
-      font-size: 1.2em;
-      padding: 15px 25px;
-      margin: 10px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: transform 0.25s ease;
-    }
+  // UN CHIN MÁS RÁPIDO (pero romántico)
+  let dx = (Math.random() * 0.7 + 0.6) * (Math.random() < 0.5 ? 1 : -1);
+  let dy = (Math.random() * 0.7 + 0.6) * (Math.random() < 0.5 ? 1 : -1);
 
-    #si { background: #ff4d88; color: white; }
-    #no { background: #ccc; }
-    #si:hover { transform: scale(1.08); }
+  objetos.push({ foto, x, y, dx, dy });
 
-    .hidden { display: none; }
+  foto.style.left = x + "px";
+  foto.style.top = y + "px";
+});
 
-    .corazon {
-      position: absolute;
-      top: -10px;
-      font-size: 20px;
-      animation: caer linear forwards;
-      pointer-events: none;
-      z-index: 1;
-    }
+function animar() {
 
-    @keyframes caer {
-      to {
-        transform: translateY(110vh);
-        opacity: 0;
+  // Movimiento
+  objetos.forEach(obj => {
+    obj.x += obj.dx;
+    obj.y += obj.dy;
+
+    // Rebote contra paredes
+    if (obj.x <= 0 || obj.x + size >= limite) obj.dx *= -1;
+    if (obj.y <= 0 || obj.y + size >= limite) obj.dy *= -1;
+  });
+
+  // Rebote entre imágenes
+  for (let i = 0; i < objetos.length; i++) {
+    for (let j = i + 1; j < objetos.length; j++) {
+
+      let a = objetos[i];
+      let b = objetos[j];
+
+      let dx = b.x - a.x;
+      let dy = b.y - a.y;
+      let distancia = Math.sqrt(dx * dx + dy * dy);
+
+      let minDist = size - 5;
+
+      if (distancia < minDist) {
+
+        // Intercambio suave de velocidades
+        let tempDx = a.dx;
+        let tempDy = a.dy;
+
+        a.dx = b.dx;
+        a.dy = b.dy;
+
+        b.dx = tempDx;
+        b.dy = tempDy;
+
+        // Separación para evitar que se queden pegadas
+        let overlap = minDist - distancia;
+        let angulo = Math.atan2(dy, dx);
+
+        let ajusteX = Math.cos(angulo) * overlap / 2;
+        let ajusteY = Math.sin(angulo) * overlap / 2;
+
+        a.x -= ajusteX;
+        a.y -= ajusteY;
+
+        b.x += ajusteX;
+        b.y += ajusteY;
       }
     }
+  }
 
-    .marco {
-      position: relative;
-      width: 260px;
-      height: 260px;
-      margin: 25px auto 0;
-      overflow: hidden;
-    }
+  // Aplicar posiciones
+  objetos.forEach(obj => {
+    obj.foto.style.left = obj.x + "px";
+    obj.foto.style.top = obj.y + "px";
+  });
 
-    .foto-circular {
-      position: absolute;
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 4px solid white;
-      box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
-      animation: latido 3s infinite ease-in-out;
-    }
+  requestAnimationFrame(animar);
+}
 
-    @keyframes latido {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-    }
-  </style>
-</head>
-
-<body>
-
-  <div id="lluvia"></div>
-
-  <div id="pantalla-inicial" class="container">
-    <h1>¿Nico quieres ser mi San Valentín? 💖</h1>
-    <p>Prometo hacer de este día algo inolvidable… ¿aceptas? ✨</p>
-
-    <button id="si">Sí 💘</button>
-    <button id="no">No 😢</button>
-
-    <p id="mensajeNo"></p>
-  </div>
-
-  <div id="pantalla-final" class="container hidden">
-    <h1>¡Sabía que dirías que sí! 💞</h1>
-    <p>Este será el comienzo de algo muy bonito N+E forever… 🌹</p>
-
-    <div class="marco">
-      <img src="pareja.jpg" class="foto-circular" />
-      <img src="pareja2.jpg" class="foto-circular" />
-      <img src="pareja3.jpg" class="foto-circular" />
-      <img src="pareja4.jpg" class="foto-circular" />
-      <img src="pareja5.jpg" class="foto-circular" />
-      <img src="pareja6.jpg" class="foto-circular" />
-    </div>
-  </div>
-
-  <audio id="musica" src="duko.mp3" loop preload="auto"></audio>
-
-  <script>
-    const si = document.getElementById('si');
-    const no = document.getElementById('no');
-    const pantallaInicial = document.getElementById('pantalla-inicial');
-    const pantallaFinal = document.getElementById('pantalla-final');
-    const mensajeNo = document.getElementById('mensajeNo');
-    const lluvia = document.getElementById('lluvia');
-    const musica = document.getElementById('musica');
-
-    const frases = [
-      "Estoy seguro de que seríamos un San Valentín perfecto… 💕",
-      "Dale una oportunidad a este corazón… 💓",
-      "Prometo hacerte sonreír todo el día… 🌸",
-      "Está bien… pero seguiré intentando conquistarte 💖"
-    ];
-
-    let index = 0;
-    let crecimiento = 1;
-    let clicksNo = 0;
-
-    function crearCorazon() {
-      const c = document.createElement('div');
-      c.className = 'corazon';
-      c.innerText = '❤️';
-      c.style.left = Math.random() * 100 + 'vw';
-      c.style.animationDuration = 5 + Math.random() * 3 + 's';
-      lluvia.appendChild(c);
-      setTimeout(() => c.remove(), 8000);
-    }
-
-    setInterval(crearCorazon, 600);
-
-    no.onclick = () => {
-      mensajeNo.textContent = frases[index % frases.length];
-      index++;
-
-      if (clicksNo < 4) {
-        crecimiento += 0.15;
-        si.style.transform = `scale(${crecimiento})`;
-        clicksNo++;
-      }
-    };
-
-    si.onclick = () => {
-      pantallaInicial.classList.add('hidden');
-      pantallaFinal.classList.remove('hidden');
-      musica.play();
-    };
-
-    const fotos = document.querySelectorAll('.foto-circular');
-    const limite = 260;
-    const size = 80;
-    const objetos = [];
-
-    fotos.forEach((foto) => {
-      let x = Math.random() * (limite - size);
-      let y = Math.random() * (limite - size);
-
-      // Velocidad romántica (suave pero visible)
-      let dx = (Math.random() * 0.4 + 0.3) * (Math.random() < 0.5 ? 1 : -1);
-      let dy = (Math.random() * 0.4 + 0.3) * (Math.random() < 0.5 ? 1 : -1);
-
-      objetos.push({ foto, x, y, dx, dy });
-      foto.style.left = x + "px";
-      foto.style.top = y + "px";
-    });
-
-    function animar() {
-
-      objetos.forEach(obj => {
-        obj.x += obj.dx;
-        obj.y += obj.dy;
-
-        if (obj.x <= 0 || obj.x + size >= limite) obj.dx *= -1;
-        if (obj.y <= 0 || obj.y + size >= limite) obj.dy *= -1;
-      });
-
-      for (let i = 0; i < objetos.length; i++) {
-        for (let j = i + 1; j < objetos.length; j++) {
-
-          let a = objetos[i];
-          let b = objetos[j];
-
-          let dx = b.x - a.x;
-          let dy = b.y - a.y;
-          let distancia = Math.sqrt(dx * dx + dy * dy);
-
-          let minDist = size - 10;
-
-          if (distancia < minDist) {
-
-            let tempDx = a.dx;
-            let tempDy = a.dy;
-
-            a.dx = b.dx;
-            a.dy = b.dy;
-
-            b.dx = tempDx;
-            b.dy = tempDy;
-          }
-        }
-      }
-
-      objetos.forEach(obj => {
-        obj.foto.style.left = obj.x + "px";
-        obj.foto.style.top = obj.y + "px";
-      });
-
-      requestAnimationFrame(animar);
-    }
-
-    animar();
-  </script>
-
-</body>
-</html>
+animar();
+</script>
