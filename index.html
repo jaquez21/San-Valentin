@@ -10,7 +10,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
     }
 
     body {
@@ -59,22 +59,6 @@
 
     .hidden { display: none; }
 
-    .corazon {
-      position: absolute;
-      top: -10px;
-      font-size: 20px;
-      animation: caer linear forwards;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    @keyframes caer {
-      to {
-        transform: translateY(110vh);
-        opacity: 0;
-      }
-    }
-
     .marco {
       position: relative;
       width: 260px;
@@ -98,21 +82,16 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.12); }
     }
-
   </style>
 </head>
 
 <body>
 
-  <div id="lluvia"></div>
-
   <div id="pantalla-inicial" class="container">
     <h1>¿Nico quieres ser mi San Valentín? 💖</h1>
     <p>Prometo hacer de este día algo inolvidable… ¿aceptas? ✨</p>
-
     <button id="si">Sí 💘</button>
     <button id="no">No 😢</button>
-
     <p id="mensajeNo"></p>
   </div>
 
@@ -130,7 +109,8 @@
     </div>
   </div>
 
-  <audio id="musica" src="musica.mp3" loop></audio>
+  <!-- AUDIO OPTIMIZADO -->
+  <audio id="musica" src="musica.mp3" loop preload="auto"></audio>
 
   <script>
     const si = document.getElementById('si');
@@ -138,7 +118,6 @@
     const pantallaInicial = document.getElementById('pantalla-inicial');
     const pantallaFinal = document.getElementById('pantalla-final');
     const mensajeNo = document.getElementById('mensajeNo');
-    const lluvia = document.getElementById('lluvia');
     const musica = document.getElementById('musica');
 
     const frases = [
@@ -152,17 +131,13 @@
     let crecimiento = 1;
     let clicksNo = 0;
 
-    function crearCorazon() {
-      const c = document.createElement('div');
-      c.className = 'corazon';
-      c.innerText = '❤️';
-      c.style.left = Math.random() * 100 + 'vw';
-      c.style.animationDuration = 4 + Math.random() * 3 + 's';
-      lluvia.appendChild(c);
-      setTimeout(() => c.remove(), 7000);
-    }
-
-    setInterval(crearCorazon, 400);
+    // 🔓 DESBLOQUEO DE AUDIO PARA IPHONE
+    document.addEventListener("touchstart", function () {
+      musica.play().then(() => {
+        musica.pause();
+        musica.currentTime = 0;
+      }).catch(() => {});
+    }, { once: true });
 
     no.onclick = () => {
       mensajeNo.textContent = frases[index % frases.length];
@@ -175,80 +150,21 @@
       }
     };
 
-    si.onclick = () => {
+    si.addEventListener("click", function () {
+
       pantallaInicial.classList.add('hidden');
       pantallaFinal.classList.remove('hidden');
-      musica.play().catch(() => {});
-    };
 
-    /* Movimiento tipo burbuja ultra fluido */
-    const fotos = document.querySelectorAll('.foto-circular');
-    const limite = 260;
-    const size = 80;
+      musica.currentTime = 0;
 
-    const objetos = [];
+      const playPromise = musica.play();
 
-    fotos.forEach((foto) => {
-      let x = Math.random() * (limite - size);
-      let y = Math.random() * (limite - size);
-
-      let dx = (Math.random() * 0.2 + 0.05) * (Math.random() < 0.5 ? 1 : -1);
-      let dy = (Math.random() * 0.2 + 0.05) * (Math.random() < 0.5 ? 1 : -1);
-
-      objetos.push({ foto, x, y, dx, dy });
-      foto.style.left = x + "px";
-      foto.style.top = y + "px";
-    });
-
-    function animar() {
-
-      objetos.forEach(obj => {
-        obj.x += obj.dx;
-        obj.y += obj.dy;
-
-        if (obj.x <= 0 || obj.x + size >= limite) obj.dx *= -1;
-        if (obj.y <= 0 || obj.y + size >= limite) obj.dy *= -1;
-
-        obj.foto.style.left = obj.x + "px";
-        obj.foto.style.top = obj.y + "px";
-      });
-
-      for (let i = 0; i < objetos.length; i++) {
-        for (let j = i + 1; j < objetos.length; j++) {
-
-          let a = objetos[i];
-          let b = objetos[j];
-
-          let dx = b.x - a.x;
-          let dy = b.y - a.y;
-          let distancia = Math.sqrt(dx * dx + dy * dy);
-
-          let minDist = 75;
-
-          if (distancia < minDist) {
-
-            let angulo = Math.atan2(dy, dx);
-            let fuerza = (minDist - distancia) * 0.02;
-
-            a.dx -= Math.cos(angulo) * fuerza;
-            a.dy -= Math.sin(angulo) * fuerza;
-
-            b.dx += Math.cos(angulo) * fuerza;
-            b.dy += Math.sin(angulo) * fuerza;
-          }
-        }
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.log("Autoplay bloqueado:", error);
+        });
       }
-
-      objetos.forEach(obj => {
-        obj.dx *= 0.995;
-        obj.dy *= 0.995;
-      });
-
-      requestAnimationFrame(animar);
-    }
-
-    animar();
-
+    });
   </script>
 
 </body>
