@@ -1,30 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>San Valentín 💘</title>
+
+<style>
+body {
+  margin: 0;
+  background: linear-gradient(to bottom, #ff9ecf, #ff4d88);
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+h1 {
+  color: white;
+  margin-top: 20px;
+}
+
+.contenedor {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin: 30px auto;
+}
+
+.foto-circular {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+}
+
+.boton-musica {
+  background: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.corazon {
+  position: fixed;
+  top: -10px;
+  color: red;
+  font-size: 20px;
+  animation: caer 5s linear infinite;
+}
+
+@keyframes caer {
+  to {
+    transform: translateY(100vh);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h1>Feliz San Valentín 💖</h1>
+
+<div class="contenedor">
+  <img src="pareja.jpg" class="foto-circular">
+  <img src="pareja2.jpg" class="foto-circular">
+  <img src="pareja3.jpg" class="foto-circular">
+  <img src="pareja4.jpg" class="foto-circular">
+  <img src="pareja5.jpg" class="foto-circular">
+  <img src="pareja6.jpg" class="foto-circular">
+</div>
+
+<button class="boton-musica" onclick="document.getElementById('musica').play()">
+  🎵 Reproducir Música
+</button>
+
+<audio id="musica" loop>
+  <source src="duko.mp3" type="audio/mpeg">
+</audio>
+
 <script>
+// CORAZONES
+function crearCorazon() {
+  const corazon = document.createElement("div");
+  corazon.classList.add("corazon");
+  corazon.innerHTML = "❤️";
+  corazon.style.left = Math.random() * 100 + "vw";
+  corazon.style.animationDuration = (Math.random() * 3 + 2) + "s";
+  document.body.appendChild(corazon);
+
+  setTimeout(() => corazon.remove(), 5000);
+}
+
+setInterval(crearCorazon, 400);
+
+// REBOTE ENTRE IMÁGENES
 const fotos = document.querySelectorAll('.foto-circular');
 const limite = 260;
 const size = 80;
-
+const radio = size / 2;
 const objetos = [];
 
-// POSICIONES INICIALES DISTRIBUIDAS (para que no se tapen)
-const posicionesIniciales = [
-  {x: 10, y: 10},
-  {x: 160, y: 10},
-  {x: 10, y: 160},
-  {x: 160, y: 160},
-  {x: 85, y: 40},
-  {x: 40, y: 110}
+const posiciones = [
+  {x: 20, y: 20},
+  {x: 150, y: 20},
+  {x: 20, y: 150},
+  {x: 150, y: 150},
+  {x: 85, y: 60},
+  {x: 60, y: 100}
 ];
 
 fotos.forEach((foto, i) => {
 
-  let pos = posicionesIniciales[i % posicionesIniciales.length];
+  let x = posiciones[i].x;
+  let y = posiciones[i].y;
 
-  let x = pos.x;
-  let y = pos.y;
-
-  // UN CHIN MÁS RÁPIDO (pero romántico)
-  let dx = (Math.random() * 0.7 + 0.6) * (Math.random() < 0.5 ? 1 : -1);
-  let dy = (Math.random() * 0.7 + 0.6) * (Math.random() < 0.5 ? 1 : -1);
+  let dx = (Math.random() * 0.8 + 0.7) * (Math.random() < 0.5 ? 1 : -1);
+  let dy = (Math.random() * 0.8 + 0.7) * (Math.random() < 0.5 ? 1 : -1);
 
   objetos.push({ foto, x, y, dx, dy });
 
@@ -34,58 +129,48 @@ fotos.forEach((foto, i) => {
 
 function animar() {
 
-  // Movimiento
   objetos.forEach(obj => {
     obj.x += obj.dx;
     obj.y += obj.dy;
 
-    // Rebote contra paredes
     if (obj.x <= 0 || obj.x + size >= limite) obj.dx *= -1;
     if (obj.y <= 0 || obj.y + size >= limite) obj.dy *= -1;
   });
 
-  // Rebote entre imágenes
   for (let i = 0; i < objetos.length; i++) {
     for (let j = i + 1; j < objetos.length; j++) {
 
       let a = objetos[i];
       let b = objetos[j];
 
-      let dx = b.x - a.x;
-      let dy = b.y - a.y;
+      let dx = (b.x + radio) - (a.x + radio);
+      let dy = (b.y + radio) - (a.y + radio);
       let distancia = Math.sqrt(dx * dx + dy * dy);
 
-      let minDist = size - 5;
+      if (distancia < size) {
 
-      if (distancia < minDist) {
+        let nx = dx / distancia;
+        let ny = dy / distancia;
 
-        // Intercambio suave de velocidades
-        let tempDx = a.dx;
-        let tempDy = a.dy;
+        let p = (a.dx - b.dx) * nx + (a.dy - b.dy) * ny;
 
-        a.dx = b.dx;
-        a.dy = b.dy;
+        if (p > 0) continue;
 
-        b.dx = tempDx;
-        b.dy = tempDy;
+        a.dx -= p * nx;
+        a.dy -= p * ny;
 
-        // Separación para evitar que se queden pegadas
-        let overlap = minDist - distancia;
-        let angulo = Math.atan2(dy, dx);
+        b.dx += p * nx;
+        b.dy += p * ny;
 
-        let ajusteX = Math.cos(angulo) * overlap / 2;
-        let ajusteY = Math.sin(angulo) * overlap / 2;
-
-        a.x -= ajusteX;
-        a.y -= ajusteY;
-
-        b.x += ajusteX;
-        b.y += ajusteY;
+        let overlap = size - distancia;
+        a.x -= nx * overlap / 2;
+        a.y -= ny * overlap / 2;
+        b.x += nx * overlap / 2;
+        b.y += ny * overlap / 2;
       }
     }
   }
 
-  // Aplicar posiciones
   objetos.forEach(obj => {
     obj.foto.style.left = obj.x + "px";
     obj.foto.style.top = obj.y + "px";
@@ -96,3 +181,6 @@ function animar() {
 
 animar();
 </script>
+
+</body>
+</html>
