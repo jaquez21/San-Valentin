@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>San Valentín 💘</title>
+  <title>San Valentín</title>
 
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
     }
 
     body {
@@ -19,64 +19,50 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      text-align: center;
+      color: #d63384;
 
-      /* Mezcla de fondos */
       background:
-        linear-gradient(rgba(255, 182, 193, 0.6), rgba(255, 182, 193, 0.6)),
-        url('fondo1.jpg') center/cover no-repeat,
-        url('fondo2.jpg') center/cover no-repeat,
-        url('fondo3.jpg') center/cover no-repeat;
-
-      animation: fondoMove 20s infinite alternate ease-in-out;
-    }
-
-    @keyframes fondoMove {
-      0% { background-position: center, top left, center, bottom right; }
-      100% { background-position: center, bottom right, center, top left; }
+        linear-gradient(rgba(255, 182, 193, 0.6), rgba(255, 105, 180, 0.6)),
+        url("fondo4.jpg") center/cover no-repeat,
+        url("fondo2.jpg") left/cover no-repeat,
+        url("fondo3.jpg") right/cover no-repeat;
     }
 
     .container {
       background: rgba(255, 255, 255, 0.9);
-      padding: 35px;
       border-radius: 25px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      padding: 40px 25px;
       max-width: 400px;
-      z-index: 2;
-      animation: aparecer 1s ease;
+      width: 90%;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 10;
     }
 
-    @keyframes aparecer {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    h1 { color: #e91e63; margin-bottom: 15px; }
-    p { margin-bottom: 20px; }
+    h1 { margin-bottom: 15px; }
+    p { margin-bottom: 25px; font-size: 1.1em; }
 
     button {
+      font-size: 1.2em;
       padding: 15px 25px;
-      font-size: 18px;
+      margin: 10px;
       border: none;
       border-radius: 12px;
       cursor: pointer;
-      margin: 8px;
-      transition: 0.3s;
+      transition: transform 0.25s ease;
     }
 
     #si { background: #ff4d88; color: white; }
     #no { background: #ccc; }
-
-    #si:hover { transform: scale(1.1); }
-    #no:hover { transform: scale(1.1); }
+    #si:hover { transform: scale(1.08); }
 
     .hidden { display: none; }
 
-    /* Lluvia de corazones */
-    .heart {
-      position: fixed;
+    .corazon {
+      position: absolute;
       top: -10px;
-      font-size: 24px;
+      font-size: 20px;
       animation: caer linear forwards;
       pointer-events: none;
       z-index: 1;
@@ -89,82 +75,181 @@
       }
     }
 
-    img {
-      width: 150px;
-      border-radius: 20px;
-      margin-top: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    .marco {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin: 25px auto 0;
+      overflow: hidden;
     }
+
+    .foto-circular {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid white;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
+      animation: latido 2.8s infinite ease-in-out;
+    }
+
+    @keyframes latido {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
   </style>
 </head>
 
 <body>
 
-  <!-- Pantalla inicial -->
-  <div id="inicio" class="container">
-    <h1>¿Quieres ser mi San Valentín? 💖</h1>
-    <p>Prometo hacerte sonreír todos los días.</p>
+  <div id="lluvia"></div>
+
+  <div id="pantalla-inicial" class="container">
+    <h1>¿Nico quieres ser mi San Valentín? 💖</h1>
+    <p>Prometo hacer de este día algo inolvidable… ¿aceptas? ✨</p>
 
     <button id="si">Sí 💘</button>
     <button id="no">No 😢</button>
+
+    <p id="mensajeNo"></p>
   </div>
 
-  <!-- Pantalla final -->
-  <div id="final" class="container hidden">
+  <div id="pantalla-final" class="container hidden">
     <h1>¡Sabía que dirías que sí! 💞</h1>
-    <p>Ahora este será el San Valentín más bonito de todos.</p>
+    <p>Este será el comienzo de algo muy bonito N+E forever… 🌹</p>
 
-    <!-- CAMBIA "foto.jpg" por tu foto -->
-    <img src="foto.jpg" alt="Nosotros" />
+    <div class="marco">
+      <img src="pareja.jpg" class="foto-circular" />
+      <img src="pareja2.jpg" class="foto-circular" />
+      <img src="pareja3.jpg" class="foto-circular" />
+      <img src="pareja4.jpg" class="foto-circular" />
+      <img src="pareja5.jpg" class="foto-circular" />
+      <img src="pareja6.jpg" class="foto-circular" />
+    </div>
   </div>
 
-  <!-- Música -->
   <audio id="musica" src="musica.mp3" loop></audio>
 
   <script>
     const si = document.getElementById('si');
     const no = document.getElementById('no');
-    const inicio = document.getElementById('inicio');
-    const final = document.getElementById('final');
+    const pantallaInicial = document.getElementById('pantalla-inicial');
+    const pantallaFinal = document.getElementById('pantalla-final');
+    const mensajeNo = document.getElementById('mensajeNo');
+    const lluvia = document.getElementById('lluvia');
     const musica = document.getElementById('musica');
 
-    // Botón Sí
-    si.addEventListener('click', () => {
-      inicio.classList.add('hidden');
-      final.classList.remove('hidden');
-      musica.play();
-      explosionCorazones();
-    });
+    const frases = [
+      "Estoy seguro de que seríamos un San Valentín perfecto… 💕",
+      "Dale una oportunidad a este corazón… 💓",
+      "Prometo hacerte sonreír todo el día… 🌸",
+      "Está bien… pero seguiré intentando conquistarte 💖"
+    ];
 
-    // Botón No (cambia texto en vez de alert)
-    no.addEventListener('click', () => {
-      inicio.querySelector('p').textContent =
-        'Está bien… pero seguiré intentando conquistarte porque me encantas 💗';
-    });
+    let index = 0;
+    let crecimiento = 1;
+    let clicksNo = 0;
 
-    // Crear lluvia constante de corazones
-    function crearLluvia() {
-      const heart = document.createElement('div');
-      heart.className = 'heart';
-      heart.textContent = '💖';
-      heart.style.left = Math.random() * 100 + 'vw';
-      heart.style.animationDuration = 3 + Math.random() * 3 + 's';
-      document.body.appendChild(heart);
-
-      setTimeout(() => heart.remove(), 6000);
+    function crearCorazon() {
+      const c = document.createElement('div');
+      c.className = 'corazon';
+      c.innerText = '❤️';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.animationDuration = 4 + Math.random() * 3 + 's';
+      lluvia.appendChild(c);
+      setTimeout(() => c.remove(), 7000);
     }
 
-    setInterval(crearLluvia, 300);
+    setInterval(crearCorazon, 400);
 
-    // Explosión de corazones al decir Sí
-    function explosionCorazones() {
-      for (let i = 0; i < 40; i++) {
-        setTimeout(crearLluvia, i * 50);
+    no.onclick = () => {
+      mensajeNo.textContent = frases[index % frases.length];
+      index++;
+
+      if (clicksNo < 4) {
+        crecimiento += 0.15;
+        si.style.transform = `scale(${crecimiento})`;
+        clicksNo++;
       }
+    };
+
+    si.onclick = () => {
+      pantallaInicial.classList.add('hidden');
+      pantallaFinal.classList.remove('hidden');
+      musica.play().catch(() => {});
+    };
+
+    /* Movimiento tipo burbuja ultra fluido */
+    const fotos = document.querySelectorAll('.foto-circular');
+    const limite = 260;
+    const size = 80;
+
+    const objetos = [];
+
+    fotos.forEach((foto) => {
+      let x = Math.random() * (limite - size);
+      let y = Math.random() * (limite - size);
+
+      let dx = (Math.random() * 0.2 + 0.05) * (Math.random() < 0.5 ? 1 : -1);
+      let dy = (Math.random() * 0.2 + 0.05) * (Math.random() < 0.5 ? 1 : -1);
+
+      objetos.push({ foto, x, y, dx, dy });
+      foto.style.left = x + "px";
+      foto.style.top = y + "px";
+    });
+
+    function animar() {
+
+      objetos.forEach(obj => {
+        obj.x += obj.dx;
+        obj.y += obj.dy;
+
+        if (obj.x <= 0 || obj.x + size >= limite) obj.dx *= -1;
+        if (obj.y <= 0 || obj.y + size >= limite) obj.dy *= -1;
+
+        obj.foto.style.left = obj.x + "px";
+        obj.foto.style.top = obj.y + "px";
+      });
+
+      for (let i = 0; i < objetos.length; i++) {
+        for (let j = i + 1; j < objetos.length; j++) {
+
+          let a = objetos[i];
+          let b = objetos[j];
+
+          let dx = b.x - a.x;
+          let dy = b.y - a.y;
+          let distancia = Math.sqrt(dx * dx + dy * dy);
+
+          let minDist = 75;
+
+          if (distancia < minDist) {
+
+            let angulo = Math.atan2(dy, dx);
+            let fuerza = (minDist - distancia) * 0.02;
+
+            a.dx -= Math.cos(angulo) * fuerza;
+            a.dy -= Math.sin(angulo) * fuerza;
+
+            b.dx += Math.cos(angulo) * fuerza;
+            b.dy += Math.sin(angulo) * fuerza;
+          }
+        }
+      }
+
+      objetos.forEach(obj => {
+        obj.dx *= 0.995;
+        obj.dy *= 0.995;
+      });
+
+      requestAnimationFrame(animar);
     }
+
+    animar();
+
   </script>
 
 </body>
 </html>
-
-
