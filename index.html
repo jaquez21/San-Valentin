@@ -1,186 +1,268 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>San Valentín 💘</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>San Valentín</title>
 
-<style>
-body {
-  margin: 0;
-  background: linear-gradient(to bottom, #ff9ecf, #ff4d88);
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-  text-align: center;
-}
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
 
-h1 {
-  color: white;
-  margin-top: 20px;
-}
+    body {
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: #d63384;
 
-.contenedor {
-  position: relative;
-  width: 260px;
-  height: 260px;
-  margin: 30px auto;
-}
+      background:
+        linear-gradient(rgba(255, 182, 193, 0.6), rgba(255, 105, 180, 0.6)),
+        url("fondo4.jpg") center/cover no-repeat,
+        url("fondo2.jpg") left/cover no-repeat,
+        url("fondo3.jpg") right/cover no-repeat;
+    }
 
-.foto-circular {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid white;
-}
+    .container {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 25px;
+      padding: 40px 25px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 10;
+    }
 
-.boton-musica {
-  background: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 15px;
-}
+    h1 { margin-bottom: 15px; }
+    p { margin-bottom: 25px; font-size: 1.1em; }
 
-.corazon {
-  position: fixed;
-  top: -10px;
-  color: red;
-  font-size: 20px;
-  animation: caer 5s linear infinite;
-}
+    button {
+      font-size: 1.2em;
+      padding: 15px 25px;
+      margin: 10px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.25s ease;
+    }
 
-@keyframes caer {
-  to {
-    transform: translateY(100vh);
-  }
-}
-</style>
+    #si { background: #ff4d88; color: white; }
+    #no { background: #ccc; }
+    #si:hover { transform: scale(1.08); }
+
+    .hidden { display: none; }
+
+    .corazon {
+      position: absolute;
+      top: -10px;
+      font-size: 20px;
+      animation: caer linear forwards;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes caer {
+      to {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
+
+    .marco {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin: 25px auto 0;
+      overflow: hidden;
+    }
+
+    .foto-circular {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid white;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
+      animation: latido 2.8s infinite ease-in-out;
+    }
+
+    @keyframes latido {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>Feliz San Valentín 💖</h1>
+  <div id="lluvia"></div>
 
-<div class="contenedor">
-  <img src="pareja.jpg" class="foto-circular">
-  <img src="pareja2.jpg" class="foto-circular">
-  <img src="pareja3.jpg" class="foto-circular">
-  <img src="pareja4.jpg" class="foto-circular">
-  <img src="pareja5.jpg" class="foto-circular">
-  <img src="pareja6.jpg" class="foto-circular">
-</div>
+  <div id="pantalla-inicial" class="container">
+    <h1>¿Nico quieres ser mi San Valentín? 💖</h1>
+    <p>Prometo hacer de este día algo inolvidable… ¿aceptas? ✨</p>
 
-<button class="boton-musica" onclick="document.getElementById('musica').play()">
-  🎵 Reproducir Música
-</button>
+    <button id="si">Sí 💘</button>
+    <button id="no">No 😢</button>
 
-<audio id="musica" loop>
-  <source src="duko.mp3" type="audio/mpeg">
-</audio>
+    <p id="mensajeNo"></p>
+  </div>
 
-<script>
-// CORAZONES
-function crearCorazon() {
-  const corazon = document.createElement("div");
-  corazon.classList.add("corazon");
-  corazon.innerHTML = "❤️";
-  corazon.style.left = Math.random() * 100 + "vw";
-  corazon.style.animationDuration = (Math.random() * 3 + 2) + "s";
-  document.body.appendChild(corazon);
+  <div id="pantalla-final" class="container hidden">
+    <h1>¡Sabía que dirías que sí! 💞</h1>
+    <p>Este será el comienzo de algo muy bonito N+E forever… 🌹</p>
 
-  setTimeout(() => corazon.remove(), 5000);
-}
+    <div class="marco">
+      <img src="pareja.jpg" class="foto-circular" />
+      <img src="pareja2.jpg" class="foto-circular" />
+      <img src="pareja3.jpg" class="foto-circular" />
+      <img src="pareja4.jpg" class="foto-circular" />
+      <img src="pareja5.jpg" class="foto-circular" />
+      <img src="pareja6.jpg" class="foto-circular" />
+    </div>
+  </div>
 
-setInterval(crearCorazon, 400);
+  <audio id="musica" src="duko.mp3" loop preload="auto"></audio>
 
-// REBOTE ENTRE IMÁGENES
-const fotos = document.querySelectorAll('.foto-circular');
-const limite = 260;
-const size = 80;
-const radio = size / 2;
-const objetos = [];
+  <script>
+    const si = document.getElementById('si');
+    const no = document.getElementById('no');
+    const pantallaInicial = document.getElementById('pantalla-inicial');
+    const pantallaFinal = document.getElementById('pantalla-final');
+    const mensajeNo = document.getElementById('mensajeNo');
+    const lluvia = document.getElementById('lluvia');
+    const musica = document.getElementById('musica');
 
-const posiciones = [
-  {x: 20, y: 20},
-  {x: 150, y: 20},
-  {x: 20, y: 150},
-  {x: 150, y: 150},
-  {x: 85, y: 60},
-  {x: 60, y: 100}
-];
+    const frases = [
+      "Estoy seguro de que seríamos un San Valentín perfecto… 💕",
+      "Dale una oportunidad a este corazón… 💓",
+      "Prometo hacerte sonreír todo el día… 🌸",
+      "Está bien… pero seguiré intentando conquistarte 💖"
+    ];
 
-fotos.forEach((foto, i) => {
+    let index = 0;
+    let crecimiento = 1;
+    let clicksNo = 0;
 
-  let x = posiciones[i].x;
-  let y = posiciones[i].y;
-
-  let dx = (Math.random() * 0.8 + 0.7) * (Math.random() < 0.5 ? 1 : -1);
-  let dy = (Math.random() * 0.8 + 0.7) * (Math.random() < 0.5 ? 1 : -1);
-
-  objetos.push({ foto, x, y, dx, dy });
-
-  foto.style.left = x + "px";
-  foto.style.top = y + "px";
-});
-
-function animar() {
-
-  objetos.forEach(obj => {
-    obj.x += obj.dx;
-    obj.y += obj.dy;
-
-    if (obj.x <= 0 || obj.x + size >= limite) obj.dx *= -1;
-    if (obj.y <= 0 || obj.y + size >= limite) obj.dy *= -1;
-  });
-
-  for (let i = 0; i < objetos.length; i++) {
-    for (let j = i + 1; j < objetos.length; j++) {
-
-      let a = objetos[i];
-      let b = objetos[j];
-
-      let dx = (b.x + radio) - (a.x + radio);
-      let dy = (b.y + radio) - (a.y + radio);
-      let distancia = Math.sqrt(dx * dx + dy * dy);
-
-      if (distancia < size) {
-
-        let nx = dx / distancia;
-        let ny = dy / distancia;
-
-        let p = (a.dx - b.dx) * nx + (a.dy - b.dy) * ny;
-
-        if (p > 0) continue;
-
-        a.dx -= p * nx;
-        a.dy -= p * ny;
-
-        b.dx += p * nx;
-        b.dy += p * ny;
-
-        let overlap = size - distancia;
-        a.x -= nx * overlap / 2;
-        a.y -= ny * overlap / 2;
-        b.x += nx * overlap / 2;
-        b.y += ny * overlap / 2;
-      }
+    function crearCorazon() {
+      const c = document.createElement('div');
+      c.className = 'corazon';
+      c.innerText = '❤️';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.animationDuration = 4 + Math.random() * 3 + 's';
+      lluvia.appendChild(c);
+      setTimeout(() => c.remove(), 7000);
     }
-  }
 
-  objetos.forEach(obj => {
-    obj.foto.style.left = obj.x + "px";
-    obj.foto.style.top = obj.y + "px";
-  });
+    setInterval(crearCorazon, 400);
 
-  requestAnimationFrame(animar);
-}
+    no.onclick = () => {
+      mensajeNo.textContent = frases[index % frases.length];
+      index++;
 
-animar();
-</script>
+      if (clicksNo < 4) {
+        crecimiento += 0.15;
+        si.style.transform = `scale(${crecimiento})`;
+        clicksNo++;
+      }
+    };
+
+    si.onclick = () => {
+      pantallaInicial.classList.add('hidden');
+      pantallaFinal.classList.remove('hidden');
+      musica.play();
+    };
+
+    const fotos = document.querySelectorAll('.foto-circular');
+    const limite = 260;
+    const size = 80;
+    const radio = size / 2;
+    const objetos = [];
+
+    const posiciones = [
+      {x: 15, y: 15},
+      {x: 165, y: 15},
+      {x: 15, y: 165},
+      {x: 165, y: 165},
+      {x: 90, y: 40},
+      {x: 40, y: 100}
+    ];
+
+    fotos.forEach((foto, i) => {
+
+      let x = posiciones[i].x;
+      let y = posiciones[i].y;
+
+      let dx = (Math.random() * 0.5 + 0.4) * (Math.random() < 0.5 ? 1 : -1);
+      let dy = (Math.random() * 0.5 + 0.4) * (Math.random() < 0.5 ? 1 : -1);
+
+      objetos.push({ foto, x, y, dx, dy });
+
+      foto.style.left = x + "px";
+      foto.style.top = y + "px";
+    });
+
+    function animar() {
+
+      objetos.forEach(obj => {
+        obj.x += obj.dx;
+        obj.y += obj.dy;
+
+        if (obj.x <= 0 || obj.x + size >= limite) obj.dx *= -1;
+        if (obj.y <= 0 || obj.y + size >= limite) obj.dy *= -1;
+      });
+
+      for (let i = 0; i < objetos.length; i++) {
+        for (let j = i + 1; j < objetos.length; j++) {
+
+          let a = objetos[i];
+          let b = objetos[j];
+
+          let dx = (b.x + radio) - (a.x + radio);
+          let dy = (b.y + radio) - (a.y + radio);
+          let distancia = Math.sqrt(dx * dx + dy * dy);
+
+          if (distancia < size) {
+
+            let nx = dx / distancia;
+            let ny = dy / distancia;
+
+            let p = (a.dx - b.dx) * nx + (a.dy - b.dy) * ny;
+
+            if (p > 0) continue;
+
+            a.dx -= p * nx;
+            a.dy -= p * ny;
+
+            b.dx += p * nx;
+            b.dy += p * ny;
+
+            let overlap = size - distancia;
+            a.x -= nx * overlap / 2;
+            a.y -= ny * overlap / 2;
+            b.x += nx * overlap / 2;
+            b.y += ny * overlap / 2;
+          }
+        }
+      }
+
+      objetos.forEach(obj => {
+        obj.foto.style.left = obj.x + "px";
+        obj.foto.style.top = obj.y + "px";
+      });
+
+      requestAnimationFrame(animar);
+    }
+
+    animar();
+  </script>
 
 </body>
 </html>
