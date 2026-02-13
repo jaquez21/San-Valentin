@@ -129,7 +129,6 @@
     </div>
   </div>
 
-  <!-- AUDIO ACTUALIZADO -->
   <audio id="musica" src="duko.mp3" loop preload="auto"></audio>
 
   <script>
@@ -167,7 +166,6 @@
     no.onclick = () => {
       mensajeNo.textContent = frases[index % frases.length];
       index++;
-
       if (clicksNo < 4) {
         crecimiento += 0.15;
         si.style.transform = `scale(${crecimiento})`;
@@ -178,39 +176,73 @@
     si.onclick = () => {
       pantallaInicial.classList.add('hidden');
       pantallaFinal.classList.remove('hidden');
-
-      musica.play().then(() => {
-        console.log("Reproduciendo música");
-      }).catch(error => {
-        console.error("Error al reproducir:", error);
-      });
+      musica.play();
     };
 
     const fotos = document.querySelectorAll('.foto-circular');
     const limite = 260;
     const size = 80;
+    const radio = size / 2;
     const objetos = [];
 
-    fotos.forEach((foto) => {
-      let x = Math.random() * (limite - size);
-      let y = Math.random() * (limite - size);
+    fotos.forEach((foto, i) => {
 
-      let dx = (Math.random() * 0.2 + 0.05) * (Math.random() < 0.5 ? 1 : -1);
-      let dy = (Math.random() * 0.2 + 0.05) * (Math.random() < 0.5 ? 1 : -1);
+      let x = (i % 3) * 85 + 10;
+      let y = Math.floor(i / 3) * 85 + 10;
+
+      let dx = (Math.random() * 0.7 + 0.5) * (Math.random() < 0.5 ? 1 : -1);
+      let dy = (Math.random() * 0.7 + 0.5) * (Math.random() < 0.5 ? 1 : -1);
 
       objetos.push({ foto, x, y, dx, dy });
+
       foto.style.left = x + "px";
       foto.style.top = y + "px";
     });
 
     function animar() {
+
       objetos.forEach(obj => {
         obj.x += obj.dx;
         obj.y += obj.dy;
 
         if (obj.x <= 0 || obj.x + size >= limite) obj.dx *= -1;
         if (obj.y <= 0 || obj.y + size >= limite) obj.dy *= -1;
+      });
 
+      for (let i = 0; i < objetos.length; i++) {
+        for (let j = i + 1; j < objetos.length; j++) {
+
+          let a = objetos[i];
+          let b = objetos[j];
+
+          let dx = (b.x + radio) - (a.x + radio);
+          let dy = (b.y + radio) - (a.y + radio);
+          let distancia = Math.sqrt(dx * dx + dy * dy);
+
+          if (distancia < size) {
+
+            let nx = dx / distancia;
+            let ny = dy / distancia;
+
+            let separacion = (size - distancia) / 2;
+
+            a.x -= nx * separacion;
+            a.y -= ny * separacion;
+            b.x += nx * separacion;
+            b.y += ny * separacion;
+
+            let tempDx = a.dx;
+            let tempDy = a.dy;
+
+            a.dx = b.dx;
+            a.dy = b.dy;
+            b.dx = tempDx;
+            b.dy = tempDy;
+          }
+        }
+      }
+
+      objetos.forEach(obj => {
         obj.foto.style.left = obj.x + "px";
         obj.foto.style.top = obj.y + "px";
       });
@@ -223,5 +255,3 @@
 
 </body>
 </html>
-
-
