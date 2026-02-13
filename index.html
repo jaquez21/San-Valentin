@@ -98,7 +98,6 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.12); }
     }
-
   </style>
 </head>
 
@@ -130,7 +129,8 @@
     </div>
   </div>
 
-  <audio id="musica" src="musica.mp3" loop></audio>
+  <!-- AUDIO CON TILDE -->
+  <audio id="musica" src="música.mp3" loop preload="auto"></audio>
 
   <script>
     const si = document.getElementById('si');
@@ -178,10 +178,14 @@
     si.onclick = () => {
       pantallaInicial.classList.add('hidden');
       pantallaFinal.classList.remove('hidden');
-      musica.play().catch(() => {});
+
+      musica.play().then(() => {
+        console.log("Reproduciendo música");
+      }).catch(error => {
+        console.error("Error al reproducir:", error);
+      });
     };
 
-    /* Movimiento tipo burbuja ultra fluido */
     const fotos = document.querySelectorAll('.foto-circular');
     const limite = 260;
     const size = 80;
@@ -201,7 +205,6 @@
     });
 
     function animar() {
-
       objetos.forEach(obj => {
         obj.x += obj.dx;
         obj.y += obj.dy;
@@ -213,42 +216,10 @@
         obj.foto.style.top = obj.y + "px";
       });
 
-      for (let i = 0; i < objetos.length; i++) {
-        for (let j = i + 1; j < objetos.length; j++) {
-
-          let a = objetos[i];
-          let b = objetos[j];
-
-          let dx = b.x - a.x;
-          let dy = b.y - a.y;
-          let distancia = Math.sqrt(dx * dx + dy * dy);
-
-          let minDist = 75;
-
-          if (distancia < minDist) {
-
-            let angulo = Math.atan2(dy, dx);
-            let fuerza = (minDist - distancia) * 0.02;
-
-            a.dx -= Math.cos(angulo) * fuerza;
-            a.dy -= Math.sin(angulo) * fuerza;
-
-            b.dx += Math.cos(angulo) * fuerza;
-            b.dy += Math.sin(angulo) * fuerza;
-          }
-        }
-      }
-
-      objetos.forEach(obj => {
-        obj.dx *= 0.995;
-        obj.dy *= 0.995;
-      });
-
       requestAnimationFrame(animar);
     }
 
     animar();
-
   </script>
 
 </body>
